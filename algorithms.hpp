@@ -5,9 +5,10 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> safe_check(Vector resource, Vector available,
-                                    Matrix need, Matrix allocated, int n);
-void do_resource_allocation(Vector resource, Vector available, Vector request,
+// 安全检查
+std::vector<std::string> safe_check(Matrix& allocated, Matrix& maxdemand, Vector& available);
+// 资源获取
+void resource_allocation(Vector resource, Vector available, Vector request,
                             Matrix max_demand, Matrix allocated, Matrix need);
 
 #endif // _ALGORITHMS_HPP_INCLUDED
