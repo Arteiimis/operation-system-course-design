@@ -1,0 +1,12 @@
+If:
+  PathMatch: .*\.cpp
+
+CompileFlags:
+  Add: [-std=c++2b]
+
+
+If:
+  PathMatch: .*\.c
+
+CompileFlags:
+  Add: [-std=c17]

@@ -1,34 +1,41 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include "data_structures.hpp"
 #include "algorithms.cpp"
+
+void test_request_resources()
+{
+    // Test case 1: Request resources for a valid process
+    Vector available1({ 10, 5, 7 });
+    Matrix maxdemand1({ {7, 5, 3}, {3, 2, 2}, {9, 0, 2} });
+    Matrix allocated1({ {0, 1, 0}, {2, 0, 0}, {3, 0, 2} });
+    Matrix need1({ {7, 4, 3}, {1, 2, 2}, {6, 0, 0} });
+    int pid1 = 1;
+    bool result1 = request_resources(pid1, available1, maxdemand1, allocated1, need1);
+    std::cout << "Test case 1: ";
+    if (result1) {
+        std::cout << "Passed" << std::endl;
+    }
+    else {
+        std::cout << "Failed" << std::endl;
+    }
+
+    // Test case 2: Request resources for an invalid process
+    Vector available2({ 10, 5, 7 });
+    Matrix maxdemand2({ {7, 5, 3}, {3, 2, 2}, {9, 0, 2} });
+    Matrix allocated2({ {0, 1, 0}, {2, 0, 0}, {3, 0, 2} });
+    Matrix need2({ {7, 4, 3}, {1, 2, 2}, {6, 0, 0} });
+    int pid2 = 2;
+    bool result2 = request_resources(pid2, available2, maxdemand2, allocated2, need2);
+    std::cout << "Test case 2: ";
+    if (!result2) {
+        std::cout << "Passed" << std::endl;
+    }
+    else {
+        std::cout << "Failed" << std::endl;
+    }
+}
 
 int main()
 {
-    // Test Case 1: Safe state
-    Matrix allocated = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
-    Matrix maxdemand = { {10, 10, 10}, {10, 10, 10}, {10, 10, 10} };
-    Vector available = { 10, 10, 10 };
-    std::vector<std::string> safe_sequence = safe_check(allocated, maxdemand, available);
-    std::cout << "Safe sequence: ";
-    for (const auto& process : safe_sequence) {
-        std::cout << process << " ";
-    }
-    std::cout << std::endl;
-    // Output: Safe sequence: Process 0 Process 1 Process 2
-
-    // Test Case 2: Unsafe state
-    allocated = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
-    maxdemand = { {10, 10, 10}, {10, 10, 10}, {10, 10, 10} };
-    available = { 0, 0, 0 };
-    safe_sequence = safe_check(allocated, maxdemand, available);
-    std::cout << "Safe sequence: ";
-    for (const auto& process : safe_sequence) {
-        std::cout << process << " ";
-    }
-    std::cout << std::endl;
-    // Output: Safe sequence: Unsafe state
-
+    test_request_resources();
     return 0;
 }

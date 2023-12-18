@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "data_structures.hpp"
+#include "consts.hpp"
 
 Vector resource[max_resource_types];                    // 系统资源总量
 Vector available[max_resource_types];                   // 系统当前可用资源

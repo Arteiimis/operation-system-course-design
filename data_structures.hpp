@@ -5,14 +5,13 @@
 #include <vector>
 #include <iostream>
 
-#include "consts.hpp"
-
 class Vector
 {
 private:
     std::vector<int> v;
 public:
     Vector() = default;
+    Vector(int m) { v.push_back(m); }                         // 从int构造
     Vector(const Vector& v) : v(v.v) { }                    // 拷贝构造函数
     Vector(Vector&& v) : v(std::move(v.v)) { }              // 移动构造函数
     Vector(const std::vector<int>& v) : v(v) { }            // 从vector构造
@@ -92,6 +91,14 @@ public:
         }
         std::cout << std::endl;
     }
+    void print_whitout_newline() const
+    {
+        for (int i = 0; i < v.size(); ++i) {
+            // 输出自动对齐
+            std::cout.width(2);
+            std::cout << v[i];
+        }
+    }
 };
 
 class Matrix
@@ -147,6 +154,7 @@ public:
         }
         return matrix;
     }
+    Vector get_row(int i) const { return m[i]; }
     void print() const
     {
         for (auto& i : m) {
