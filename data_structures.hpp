@@ -83,9 +83,9 @@ public:
             this->m.push_back(Vector(m[i]));
         }
     }
-    Matrix(int list[][max_resource_types], int size)          // 从二维数组构造
+    Matrix(int list[max_processes][max_resource_types])          // 从二维数组构造
     {
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < max_processes; ++i) {
             this->m.push_back(Vector(list[i], max_resource_types));
         }
     }
