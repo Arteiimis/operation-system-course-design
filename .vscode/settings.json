@@ -56,7 +56,8 @@
         "numeric": "cpp",
         "random": "cpp",
         "string_view": "cpp",
-        "numbers": "cpp"
+        "numbers": "cpp",
+        "sstream": "cpp"
     },
     "commentTranslate.hover.enabled": false
 }

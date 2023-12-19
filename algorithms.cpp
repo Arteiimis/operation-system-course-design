@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 #include "data_structures.hpp"
@@ -44,7 +45,7 @@ public:
     }
 
     // 单次资源分配前安全检查
-    safe_sequence_t safe_check(Matrix allocated, Matrix maxdemand, Vector available)
+    safe_sequence_t safe_check(Matrix allocated, Matrix maxdemand, Vector available) const
     {
         safe_sequence_t safe_sequence;
         std::vector<bool> finished(allocated.get_size(), false);
@@ -85,11 +86,21 @@ public:
             }
             std::cout << "请输入该进程需求向量(request)：";
             std::vector<int> request_vector;
-            for (int i = 0; i < max_resource_types; i++) {
+            while (true) {
+                std::string input;
+                std::cin >> input;
+                std::stringstream ss(input);
                 int tmp;
-                std::cin >> tmp;
-                request_vector.push_back(tmp);
+                while (ss >> tmp) {
+                    request_vector.push_back(tmp);
+                }
+                if (request_vector.size() == max_resource_types) {
+                    break;
+                }
+                std::cout << "输入的向量维度不正确，请重新输入: ";
+                std::cout.sync_with_stdio();
             }
+
             request = Vector(request_vector);
             std::cout << "请求进程id：" << pid << " 请求向量：";
             request.print();
@@ -145,7 +156,7 @@ public:
         }
     }
 
-    void curr_sys_info_print()
+    void curr_sys_info_print() const
     {
         std::cout << "当前系统信息:" << std::endl;
         std::cout << "系统当前可用资源数：";
@@ -158,6 +169,59 @@ public:
             std::cout << "\t\t";
             need[i].print_whitout_newline();
             std::cout << std::endl;
+        }
+    }
+
+    void safe_check_test() const
+    {
+        std::cout << "----安全序列测试----" << std::endl;
+        curr_sys_info_print();
+        while (true) {
+            int pid;
+            std::cout << "请输入请求资源的进程号，2887退出：";
+            std::cin >> pid;
+            if (pid == 2887) {
+                std::cout << "退出安全序列测试" << std::endl;
+                return;
+            }
+            std::cout << "请输入该进程需求向量(request)：";
+            std::vector<int> request_vector;
+            while (true) {
+                std::string input;
+                std::cin >> input;
+                std::stringstream ss(input);
+                int tmp;
+                while (ss >> tmp) {
+                    request_vector.push_back(tmp);
+                }
+                if (request_vector.size() == max_resource_types) {
+                    break;
+                }
+                std::cout << "输入的向量维度不正确，请重新输入：";
+            }
+            auto m_request = Vector(request_vector);
+            std::cout << "请求进程id：" << pid << " 请求向量：";
+            m_request.print();
+            auto m_allocated = allocated;
+            auto m_need = need;
+            auto m_available = available;
+
+            m_available = m_available - m_request;
+            m_allocated[pid] = m_allocated[pid] + m_request;
+            m_need[pid] = m_need[pid] - m_request;
+
+            auto safe_sequence = safe_check(m_allocated, max_demand, m_available);
+            if (safe_sequence.size() != max_processes) {
+                std::cout << "未找到安全序列，该测试序列不安全。" << std::endl;
+                continue;
+            }
+            else {
+                std::cout << "该次资源分配安全，安全序列如下：" << std::endl;
+                for (auto i : safe_sequence) {
+                    std::cout << i << std::endl;
+                }
+                continue;
+            }
         }
     }
 };

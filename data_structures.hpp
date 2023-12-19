@@ -134,7 +134,7 @@ public:
     ~Matrix() = default;
 
     Vector& operator[](int i) { return m[i]; }
-    // const Vector& operator[](int i) const { return m[i]; }  // 重载[]运算符
+    const Vector& operator[](int i) const { return m[i]; }  // 重载[]运算符
     Matrix& operator=(const Matrix& m) { this->m = m.m; return *this; }
     Matrix& operator=(Matrix&& m) { this->m = std::move(m.m); return *this; }
     Matrix operator+(const Matrix& m)
