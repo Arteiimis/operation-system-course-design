@@ -3,111 +3,161 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "algorithms.hpp"
+#include "data_structures.hpp"
 
-/**
- *@brief 安全检查
- *
- * @param allocated 已分配资源
- * @param maxdemand 最大需求矩阵
- * @param available 系统当前可用资源
- * @return std::vector<std::string>
- */
-std::vector<std::string> safe_check(Matrix& allocated, Matrix& maxdemand, Vector& available)
+class bankers_algorithm
 {
+public:
+    using safe_sequence_t = std::vector<std::string>;
+private:
+    int max_resource_types;   // 最大资源种类数
+    int max_processes;       // 最大进程数
+
+    Vector resource;
+    Vector available;
+    Vector request;
+    Matrix max_demand;
+    Matrix allocated;
+    Matrix need;
     std::vector<std::string> safe_sequence;
-    std::vector<bool> finished(allocated.get_size(), false);
 
-    while (true) {
-        bool found = false;
-        for (size_t i = 0; i < allocated.get_size(); ++i) {
-            if (!finished[i] && maxdemand[i] - allocated[i] <= available) {
-                safe_sequence.push_back("Process " + std::to_string(i));
-                available = available + allocated[i];
-                finished[i] = true;
-                found = true;
+public:
+    bankers_algorithm() = default;
+    bankers_algorithm(int max_resource_types = 5, int max_processes = 10)
+        : max_resource_types(max_resource_types), max_processes(max_processes)
+    {
+        resource = Vector(max_resource_types);
+        available = Vector(max_resource_types);
+        max_demand = Matrix(max_processes, max_resource_types);
+        allocated = Matrix(max_processes, max_resource_types);
+        need = Matrix(max_processes, max_resource_types);
+    }
+
+    void init(Vector resource, Vector available, Matrix max_demand,
+                Matrix allocated, Matrix need)
+    {
+        this->resource = resource;
+        this->available = available;
+        this->max_demand = max_demand;
+        this->allocated = allocated;
+        this->need = need;
+    }
+
+    // 单次资源分配前安全检查
+    safe_sequence_t safe_check(Matrix allocated, Matrix maxdemand, Vector available)
+    {
+        safe_sequence_t safe_sequence;
+        std::vector<bool> finished(allocated.get_size(), false);
+
+        while (true) {
+            bool found = false;
+            // 遍历所有进程
+            for (size_t i = 0; i < allocated.get_size(); ++i) {
+                if (!finished[i] && maxdemand[i] - allocated[i] <= available) {
+                    safe_sequence.push_back("Process " + std::to_string(i));
+                    available = available + allocated[i];
+                    finished[i] = true;
+                    found = true;
+                }
+            }
+            if (!found) {
+                break;
             }
         }
-        if (!found) {
-            break;
+
+        if (std::find(finished.begin(), finished.end(), false) != finished.end()) {
+            return safe_sequence_t{ "Unsafe state" };
         }
+
+        return safe_sequence;
     }
 
-    if (std::find(finished.begin(), finished.end(), false) != finished.end()) {
-        return std::vector<std::string>{"Unsafe state"};
-    }
-
-    return safe_sequence;
-}
-
-/**
- *@brief 资源申请
- *
- * @param pid       进程id
- * @param available 系统当前可用资源
- * @param maxdemand 最大需求矩阵
- * @param allocated 当前分配矩阵
- * @param need      进程当前需求矩阵
- * @return true     申请成功
- * @return false    申请失败
- */
-bool request_resources(int pid, Vector& available, Matrix& maxdemand,
-                        Matrix& allocated, Matrix& need)
-{
-    // 当前系统信息打印，自动对齐
-
-    std::cout << "当前系统信息:" << std::endl;
-    std::cout << "最大需求数:" << "\t" << "已分配数据:" << "\t" << "最多还需要:" << std::endl;
-    for (int i = 0; i < allocated.get_size(); ++i) {
-        maxdemand[i].print_whitout_newline();
-        std::cout << "\t\t";
-        allocated[i].print_whitout_newline();
-        std::cout << "\t\t";
-        need[i].print_whitout_newline();
-        std::cout << std::endl;
-    }
-
-    // 检查进程pid的资源请求是否合法
-    if (need[pid] <= available) {
-        // 模拟分配资源给进程pid
-        available = available - need[pid];
-        allocated[pid] = allocated[pid] + need[pid];
-        need[pid] = Vector(0); // 进程已满足需求，将其需求置为0
-
-        // 检查系统是否处于安全状态
-        std::vector<std::string> safe_sequence = safe_check(allocated, maxdemand, available);
-        if (safe_sequence.size() == allocated.get_size()) {
-            // 输出系统信息
-            std::cout << "资源分配成功！" << std::endl;
-            std::cout << "当前系统信息:" << std::endl;
-            // 输出安全序列
-            std::cout << "安全序列:";
-            for (auto& process : safe_sequence) {
-                std::cout << process << " ";
+    bool resource_allocation()
+    {
+        int pid = 0;
+        curr_sys_info_print();
+        while (true) {
+            std::cout << "请输入请求资源的进程号，输入2887退出资源申请：";
+            std::cin >> pid;
+            if (pid == 2887) {
+                std::cout << "退出资源申请" << std::endl;
+                return true;
             }
-            std::cout << std::endl;
-            std::cout << "最大需求数:" << "\t" << "已分配数据:" << "\t" << "最多还需要:" << std::endl;
-            for (int i = 0; i < allocated.get_size(); ++i) {
-                maxdemand[i].print_whitout_newline();
-                std::cout << "\t\t";
-                allocated[i].print_whitout_newline();
-                std::cout << "\t\t";
-                need[i].print_whitout_newline();
+            std::cout << "请输入该进程需求向量(request)：";
+            std::vector<int> request_vector;
+            for (int i = 0; i < max_resource_types; i++) {
+                int tmp;
+                std::cin >> tmp;
+                request_vector.push_back(tmp);
+            }
+            request = Vector(request_vector);
+            std::cout << "请求进程id：" << pid << " 请求向量：";
+            request.print();
+
+            if (request > need[pid]) {
+                std::cout << "该程序最大需求：";
+                need[pid].print();
+                std::cout << "请求资源大于进程最大需求，分配失败" << std::endl;
+                continue;
+            }
+            if (request > available) {
+                std::cout << "当前系统可用资源：";
+                available.print();
+                std::cout << "当前系统资源不足，分配失败" << std::endl;
+                continue;
+            }
+
+            available = available - request;
+            allocated[pid] = allocated[pid] + request;
+            need[pid] = need[pid] - request;
+
+            safe_sequence = safe_check(allocated, max_demand, available);
+            if (safe_sequence.size() != max_processes) {
+                std::cout << "未找到安全序列，该测试序列不安全，执行回滚操作" << std::endl;
+                available = available + request;
+                allocated[pid] = allocated[pid] - request;
+                need[pid] = need[pid] + request;
+                continue;
+            }
+            else {
+                std::cout << "找到安全序列，该测试序列安全，安全序列如下：" << std::endl;
+                std::cout << " ";
+                for (auto i : safe_sequence) {
+                    std::cout << i << " ";
+                }
                 std::cout << std::endl;
+                check_if_task_complate();
+                std::cout << "确认分配操作：" << std::endl;
+                curr_sys_info_print();
+                continue;
             }
-            return true;
-        }
-        else {
-            // 回滚分配的资源
-            available = available + need[pid];
-            allocated[pid] = allocated[pid] - need[pid];
-            need[pid] = maxdemand[pid] - allocated[pid];
-            std::cout << "资源分配失败，系统处于不安全状态！" << std::endl;
-            return false;
         }
     }
-    else {
-        std::cout << "资源分配失败，进程需求超过系统可用资源！" << std::endl;
-        return false;
+
+    void check_if_task_complate()
+    {
+        for (int i = 0; i < max_processes; ++i) {
+            if (need[i] == Vector(3, 0)) {
+                std::cout << "第i个进程已经满足最大需求，回收其占有的资源" << std::endl;
+                available = available + allocated[i];
+                allocated[i] = Vector(3, 0);
+            }
+        }
     }
-}
+
+    void curr_sys_info_print()
+    {
+        std::cout << "当前系统信息:" << std::endl;
+        std::cout << "系统当前可用资源数：";
+        available.print();
+        std::cout << "最大需求数:" << "\t" << "已分配数据:" << "\t" << "最多还需要:" << std::endl;
+        for (int i = 0; i < allocated.get_size(); ++i) {
+            max_demand[i].print_whitout_newline();
+            std::cout << "\t\t";
+            allocated[i].print_whitout_newline();
+            std::cout << "\t\t";
+            need[i].print_whitout_newline();
+            std::cout << std::endl;
+        }
+    }
+};

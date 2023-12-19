@@ -11,11 +11,12 @@ private:
     std::vector<int> v;
 public:
     Vector() = default;
-    Vector(int m) { v.push_back(m); }                         // 从int构造
+    Vector(int size) { v.resize(size); }
     Vector(const Vector& v) : v(v.v) { }                    // 拷贝构造函数
     Vector(Vector&& v) : v(std::move(v.v)) { }              // 移动构造函数
     Vector(const std::vector<int>& v) : v(v) { }            // 从vector构造
     Vector(int list[], int size) : v(list, list + size) { } // 从数组构造
+    Vector(size_t count, int value) : v(count, value) { }   // 从count个value构造
     Vector(std::initializer_list<int> m)
     {
         for (auto& i : m) {
@@ -28,6 +29,8 @@ public:
     const int& operator[](int i) const { return v[i]; }     // 重载[]运算符
     Vector& operator=(const Vector& v) { this->v = v.v; return *this; }
     Vector& operator=(Vector&& v) { this->v = std::move(v.v); return *this; }
+    bool operator==(const Vector& v) const
+    { return (this->v == v.v && this->v.size() == v.v.size()); }
     Vector operator+(const Vector& v)
     {
         Vector tmp;
@@ -122,10 +125,16 @@ public:
             this->m.push_back(Vector(i));
         }
     }
+    Matrix(int row, int column)
+    {
+        for (int i = 0; i < row; ++i) {
+            m.push_back(Vector(column));
+        }
+    }
     ~Matrix() = default;
 
     Vector& operator[](int i) { return m[i]; }
-    const Vector& operator[](int i) const { return m[i]; }  // 重载[]运算符
+    // const Vector& operator[](int i) const { return m[i]; }  // 重载[]运算符
     Matrix& operator=(const Matrix& m) { this->m = m.m; return *this; }
     Matrix& operator=(Matrix&& m) { this->m = std::move(m.m); return *this; }
     Matrix operator+(const Matrix& m)
@@ -146,15 +155,8 @@ public:
     }
 
     int get_size() const { return m.size(); }
-    std::vector<std::vector<int>> get_matrix() const
-    {
-        std::vector<std::vector<int>> matrix;
-        for (auto& i : m) {
-            matrix.push_back(i.get_vector());
-        }
-        return matrix;
-    }
     Vector get_row(int i) const { return m[i]; }
+    std::vector<Vector> get_matrix() const { return m; }
     void print() const
     {
         for (auto& i : m) {
