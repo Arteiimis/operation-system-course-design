@@ -31,7 +31,7 @@ void interface()
         {
             std::cout << "即将使用测试数据 1 初始化系统资源..." << std::endl;
             test_unit_1 test;
-            // Test initialization
+            // 测试数据初始化
             Vector resource = test.resource;
             Vector available = test.available;
             Matrix max_demand = test.max_demand;
@@ -95,6 +95,7 @@ void interface()
             std::cout << "即将执行测试单元 2 , 确认? (Y/n):";
             std::cin >> choice;
             if (choice == "\t" || choice == "y") {
+                system("cls");
                 test_bankers_algorithm_2(ba);
             }
             else {

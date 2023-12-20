@@ -102,6 +102,7 @@ public:
             }
 
             request = Vector(request_vector);
+            std::cout << std::endl;
             std::cout << "请求进程id：" << pid << " 请求向量：";
             request.print();
 
@@ -158,11 +159,13 @@ public:
 
     void curr_sys_info_print() const
     {
+        std::cout << "----------------------------------------------------------" << std::endl;
         std::cout << "当前系统信息:" << std::endl;
         std::cout << "系统当前可用资源数：";
         available.print();
-        std::cout << "最大需求数:" << "\t" << "已分配数据:" << "\t" << "最多还需要:" << std::endl;
+        std::cout << "进程编号:" << "\t" << "最大需求数:" << "\t" << "已分配数据:" << "\t" << "最多还需要:" << std::endl;
         for (int i = 0; i < allocated.get_size(); ++i) {
+            std::cout << "process " << i << "\t";
             max_demand[i].print_whitout_newline();
             std::cout << "\t\t";
             allocated[i].print_whitout_newline();
@@ -170,10 +173,13 @@ public:
             need[i].print_whitout_newline();
             std::cout << std::endl;
         }
+        std::cout << "----------------------------------------------------------" << std::endl;
     }
 
     void safe_check_test() const
     {
+        std::cout << "即将开始安全序列测试..." << std::endl;
+        std::cout << "注意，安全序列测试将不会作用于已加载的系统资源" << std::endl;
         std::cout << "----安全序列测试----" << std::endl;
         curr_sys_info_print();
         while (true) {
