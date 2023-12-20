@@ -87,8 +87,9 @@ public:
             std::cout << "请输入该进程需求向量(request)：";
             std::vector<int> request_vector;
             while (true) {
+                scanf_s("%*[^\n]"); scanf_s("%*c"); //在下次读取前清空缓冲区
                 std::string input;
-                std::cin >> input;
+                std::getline(std::cin, input);
                 std::stringstream ss(input);
                 int tmp;
                 while (ss >> tmp) {
@@ -98,7 +99,6 @@ public:
                     break;
                 }
                 std::cout << "输入的向量维度不正确，请重新输入: ";
-                std::cout.sync_with_stdio();
             }
 
             request = Vector(request_vector);

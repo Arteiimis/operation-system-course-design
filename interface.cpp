@@ -57,19 +57,43 @@ void interface()
         }
         case 4:
         {
-            std::cout << "即将执行测试单元 1 , 确认? (Y/n):";
+            std::cout << "请选择测试单元：" << std::endl;
+            std::cout << "1. 测试单元 1" << std::endl;
+            std::cout << "2. 测试单元 2" << std::endl;
+            std::cout << "3. 返回" << std::endl;
+            std::cout << "请输入选项：";
+            int option;
             std::string choice;
+            std::cin >> option;
+            switch (option) {
+            case 1:
+                goto test_1;
+            case 2:
+                goto test_2;
+            case 3:
+                break;
+            default:
+            {
+                std::cout << "无效选项" << std::endl;
+                break;
+            }
+            }
+            break;
+        test_1:
+            std::cout << "即将执行测试单元 1 , 确认? (Y/n):";
             std::cin >> choice;
             if (choice == "\t" || choice == "y") {
+                system("cls");
                 test_bankers_algorithm_1(ba);
             }
             else {
                 std::cout << "单元测试 1 取消" << std::endl;
             }
+            break;
 
+        test_2:
             std::cout << "即将执行测试单元 2 , 确认? (Y/n):";
             std::cin >> choice;
-            std::cin.sync();
             if (choice == "\t" || choice == "y") {
                 test_bankers_algorithm_2(ba);
             }
@@ -82,6 +106,7 @@ void interface()
         case 5:
         {
             built_in_test_viewer();
+            break;
         }
         case 6:
         {
