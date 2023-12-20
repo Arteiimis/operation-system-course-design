@@ -48,6 +48,7 @@ public:
     safe_sequence_t safe_check(Matrix allocated, Matrix maxdemand, Vector available) const
     {
         safe_sequence_t safe_sequence;
+        int first_unsafe_process = -1;
         std::vector<bool> finished(allocated.get_size(), false);
 
         while (true) {
@@ -66,11 +67,20 @@ public:
             }
         }
 
-        if (std::find(finished.begin(), finished.end(), false) != finished.end()) {
+        auto i = std::find(finished.begin(), finished.end(), false);
+        if (i != finished.end()) {
+            int index = std::distance(finished.begin(), i);
+            std::cout << "第" << index << "个进程不安全" << std::endl;
             return safe_sequence_t{ "Unsafe state" };
         }
 
         return safe_sequence;
+    }
+
+    void curr_system_safe_check()
+    {
+        safe_sequence = safe_check(allocated, max_demand, available);
+
     }
 
     bool resource_allocation()
@@ -87,7 +97,8 @@ public:
             std::cout << "请输入该进程需求向量(request)：";
             std::vector<int> request_vector;
             while (true) {
-                scanf_s("%*[^\n]"); scanf_s("%*c"); //在下次读取前清空缓冲区
+                // 清空缓冲区
+                std::cin.ignore(INT_MAX, '\n');
                 std::string input;
                 std::getline(std::cin, input);
                 std::stringstream ss(input);
