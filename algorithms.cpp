@@ -53,9 +53,8 @@ public:
         safe_sequence_t safe_sequence;                              // 安全序列
         std::vector<bool> finished(allocated.get_size(), false);    // 标记进程资源是否满足
         Vector work = available;                                    // 工作向量
-        int count = 0;                                              // 计数器，记录已经满足的进程数
         Matrix need = maxdemand - allocated;
-        while (count < allocated.get_size()) {
+        while (true) {
             bool flag = false;
             for (int i = 0; i < allocated.get_size(); ++i) {
                 if (finished[i] == false && need[i] <= work) {
@@ -64,7 +63,6 @@ public:
                     finished[i] = true;
                     safe_sequence.push_back("process " + std::to_string(i));
                     flag = true;
-                    ++count;
                 }
             }
             if (flag == false) {
