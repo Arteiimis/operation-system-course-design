@@ -48,7 +48,6 @@ public:
     safe_sequence_t safe_check(Matrix allocated, Matrix maxdemand, Vector available) const
     {
         safe_sequence_t safe_sequence;
-        int first_unsafe_process = -1;
         std::vector<bool> finished(allocated.get_size(), false);
 
         while (true) {
@@ -95,6 +94,14 @@ public:
     {
         int pid = 0;
         curr_sys_info_print();
+        int zero_count = 0;
+        for (auto i : available.get_vector()) {
+            if (i < 0 || available == Vector(3, 0)) {
+                std::cout << "系统资源不足，无法初始化" << std::endl;
+                system("pause");
+                return false;
+            }
+        }
         while (true) {
             std::cout << "请输入请求资源的进程号，输入2887退出资源申请：";
             std::cin >> pid;
@@ -128,12 +135,14 @@ public:
             if (request > need[pid]) {
                 std::cout << "该程序最大需求：";
                 need[pid].print();
+                curr_sys_info_print();
                 std::cout << "请求资源大于进程最大需求，分配失败" << std::endl;
                 continue;
             }
             if (request > available) {
                 std::cout << "当前系统可用资源：";
                 available.print();
+                curr_sys_info_print();
                 std::cout << "当前系统资源不足，分配失败" << std::endl;
                 continue;
             }
@@ -168,10 +177,10 @@ public:
     void check_if_task_complate()
     {
         for (int i = 0; i < max_processes; ++i) {
-            if (need[i] == Vector(3, 0)) {
+            if (need[i] == Vector(max_resource_types, 0)) {
                 std::cout << "第i个进程已经满足最大需求，回收其占有的资源" << std::endl;
                 available = available + allocated[i];
-                allocated[i] = Vector(3, 0);
+                allocated[i] = Vector(max_resource_types, 0);
             }
         }
     }

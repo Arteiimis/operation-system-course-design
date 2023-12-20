@@ -1,6 +1,7 @@
 #ifndef _DATA_STRUCTURES_HPP_INCLUDED
 #define _DATA_STRUCTURES_HPP_INCLUDED
 
+#include <algorithm>
 #include <initializer_list>
 #include <vector>
 #include <iostream>
@@ -15,7 +16,7 @@ public:
     Vector(const Vector& v) : v(v.v) { }                    // 拷贝构造函数
     Vector(Vector&& v) : v(std::move(v.v)) { }              // 移动构造函数
     Vector(const std::vector<int>& v) : v(v) { }            // 从vector构造
-    Vector(int list[], int size) : v(list, list + size) { } // 从数组构造
+    // Vector(int list[], int size) : v(list, list + size) { } // 从数组构造
     Vector(size_t count, int value) : v(count, value) { }   // 从count个value构造
     Vector(std::initializer_list<int> m)
     {
@@ -49,21 +50,21 @@ public:
     }
     bool operator>(const Vector& v)
     {
+        // 存在一个大于则返回 ture
+        std::vector<bool> tmp;
         for (int i = 0; i < this->v.size(); ++i) {
-            if (this->v[i] <= v.v[i]) {
-                return false;
-            }
+            tmp.push_back(this->v[i] > v.v[i]);
         }
-        return true;
+        return std::any_of(tmp.begin(), tmp.end(), [] (bool i) { return i; });
     }
     bool operator<(const Vector& v)
     {
+        // 全都小于则返回 ture
+        std::vector<bool> tmp;
         for (int i = 0; i < this->v.size(); ++i) {
-            if (this->v[i] >= v.v[i]) {
-                return false;
-            }
+            tmp.push_back(this->v[i] < v.v[i]);
         }
-        return true;
+        return std::all_of(tmp.begin(), tmp.end(), [] (bool i) { return i; });
     }
     bool operator>=(const Vector& v)
     {
@@ -82,6 +83,15 @@ public:
             }
         }
         return true;
+    }
+    bool operator!=(const Vector& v)
+    {
+        // 一个分量不等于则返回 true
+        std::vector<bool> tmp;
+        for (int i = 0; i < this->v.size(); ++i) {
+            tmp.push_back(this->v[i] != v.v[i]);
+        }
+        return std::any_of(tmp.begin(), tmp.end(), [] (bool i) { return i; });
     }
     int get_size() const { return v.size(); }
     std::vector<int> get_vector() const { return v; }

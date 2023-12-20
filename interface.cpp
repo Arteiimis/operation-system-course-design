@@ -60,7 +60,7 @@ void interface()
             std::cout << "请选择测试单元：" << std::endl;
             std::cout << "1. 测试单元 1" << std::endl;
             std::cout << "2. 测试单元 2" << std::endl;
-            std::cout << "3. 返回" << std::endl;
+            std::cout << "3. 测试单元 3" << std::endl;
             std::cout << "请输入选项：";
             int option;
             std::string choice;
@@ -71,6 +71,8 @@ void interface()
             case 2:
                 goto test_2;
             case 3:
+                goto test_3;
+            case 4:
                 break;
             default:
             {
@@ -102,7 +104,16 @@ void interface()
                 std::cout << "单元测试 2 取消" << std::endl;
             }
             break;
-
+        test_3:
+            std::cout << "即将执行测试单元 3 , 确认? (Y/n):";
+            std::cin >> choice;
+            if (choice == "\t" || choice == "y") {
+                system("cls");
+                test_bankers_algorithm_4(ba);
+            }
+            else {
+                std::cout << "单元测试 3 取消" << std::endl;
+            }
         }
         case 5:
         {
