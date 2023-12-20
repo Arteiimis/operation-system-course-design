@@ -68,21 +68,21 @@ public:
     }
     bool operator>=(const Vector& v)
     {
+        // 全都大于等于返回 true
+        std::vector<bool> tmp;
         for (int i = 0; i < this->v.size(); ++i) {
-            if (this->v[i] < v.v[i]) {
-                return false;
-            }
+            tmp.push_back(this->v[i] >= v.v[i]);
         }
-        return true;
+        return std::all_of(tmp.begin(), tmp.end(), [] (bool i) { return i; });
     }
     bool operator<=(const Vector& v)
     {
+        // 全都小于等于返回 true
+        std::vector<bool> tmp;
         for (int i = 0; i < this->v.size(); ++i) {
-            if (this->v[i] > v.v[i]) {
-                return false;
-            }
+            tmp.push_back(this->v[i] <= v.v[i]);
         }
-        return true;
+        return std::all_of(tmp.begin(), tmp.end(), [] (bool i) { return i; });
     }
     bool operator!=(const Vector& v)
     {
@@ -162,6 +162,12 @@ public:
             tmp.m.push_back(this->m[i] - m.m[i]);
         }
         return tmp;
+    }
+
+    void remove(int i)
+    {
+        auto it = m.begin();
+        m.erase(it + i);
     }
 
     int get_size() const { return m.size(); }

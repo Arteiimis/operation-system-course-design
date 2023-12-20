@@ -2,6 +2,7 @@
 #include <ostream>
 #include <string>
 #include "test_algorithms.cpp"
+#include "algorithms.cpp"
 
 void display_menu()
 {
@@ -10,7 +11,7 @@ void display_menu()
     std::cout << "│2. view current system info      │" << std::endl;
     std::cout << "│3. safe check test               │" << std::endl;
     std::cout << "│4. run resource allocation test  │" << std::endl;
-    std::cout << "│5. view all built-in test        │" << std::endl;
+    std::cout << "│5. input custem test matrix      │" << std::endl;
     std::cout << "│                                 │" << std::endl;
     std::cout << "│6. exit                          │" << std::endl;
     std::cout << "└---------------------------------┘" << std::endl;
@@ -117,7 +118,20 @@ void interface()
         }
         case 5:
         {
-            built_in_test_viewer();
+            while (true) {
+                ba = input_custem_test_matrix();
+                std::cout << "自定义测试矩阵如下：" << std::endl;
+                ba.curr_sys_info_print();
+                std::cout << "确认测试数据？(Y/n):";
+                // std::cin.ignore(INT_MAX, '\n');
+                std::string choice;
+                std::getline(std::cin, choice);
+                if (choice != "n") {
+                    break;
+                }
+                std::cout << "请重新输入：" << std::endl;
+            }
+            ba.resource_allocation();
             break;
         }
         case 6:

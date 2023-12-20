@@ -1,3 +1,6 @@
+#ifndef _ALGORITHMS_CPP_
+#define _ALGORITHMS_CPP_
+
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -24,7 +27,7 @@ private:
 
 public:
     bankers_algorithm() = default;
-    bankers_algorithm(int max_resource_types = 5, int max_processes = 10)
+    bankers_algorithm(int max_processes = 10, int max_resource_types = 5)
         : max_resource_types(max_resource_types), max_processes(max_processes)
     {
         resource = Vector(max_resource_types);
@@ -47,30 +50,30 @@ public:
     // 单次资源分配前安全检查
     safe_sequence_t safe_check(Matrix allocated, Matrix maxdemand, Vector available) const
     {
-        safe_sequence_t safe_sequence;
-        std::vector<bool> finished(allocated.get_size(), false);
-
-        while (true) {
-            bool found = false;
-            // 遍历所有进程
-            for (size_t i = 0; i < allocated.get_size(); ++i) {
-                if (!finished[i] && maxdemand[i] - allocated[i] <= available) {
-                    safe_sequence.push_back("Process " + std::to_string(i));
-                    available = available + allocated[i];
+        safe_sequence_t safe_sequence;                              // 安全序列
+        std::vector<bool> finished(allocated.get_size(), false);    // 标记进程资源是否满足
+        Vector work = available;                                    // 工作向量
+        int count = 0;                                              // 计数器，记录已经满足的进程数
+        Matrix need = maxdemand - allocated;
+        while (count < allocated.get_size()) {
+            bool flag = false;
+            for (int i = 0; i < allocated.get_size(); ++i) {
+                if (finished[i] == false && need[i] <= work) {
+                    work = work + allocated[i];
+                    allocated[i] = Vector(3, 0);
                     finished[i] = true;
-                    found = true;
+                    safe_sequence.push_back("process " + std::to_string(i));
+                    flag = true;
+                    ++count;
                 }
             }
-            if (!found) {
+            if (flag == false) {
                 break;
             }
         }
 
-        auto i = std::find(finished.begin(), finished.end(), false);
-        if (i != finished.end()) {
-            int index = std::distance(finished.begin(), i);
-            std::cout << "第" << index << "个进程不安全" << std::endl;
-            return safe_sequence_t{ "Unsafe state" };
+        if (std::find(finished.begin(), finished.end(), false) != finished.end()) {
+            return safe_sequence_t{ "Unsafe satate" };
         }
 
         return safe_sequence;
@@ -178,9 +181,13 @@ public:
     {
         for (int i = 0; i < max_processes; ++i) {
             if (need[i] == Vector(max_resource_types, 0)) {
-                std::cout << "第i个进程已经满足最大需求，回收其占有的资源" << std::endl;
+                std::cout << "process " << i << " 以满足最大需求，回收其请求的资源" << std::endl;
                 available = available + allocated[i];
                 allocated[i] = Vector(max_resource_types, 0);
+                max_demand.remove(i);
+                allocated.remove(i);
+                need.remove(i);
+                max_processes--;
             }
         }
     }
@@ -259,3 +266,5 @@ public:
         }
     }
 };
+
+#endif
