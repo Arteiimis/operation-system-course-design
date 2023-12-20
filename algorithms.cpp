@@ -80,7 +80,15 @@ public:
     void curr_system_safe_check()
     {
         safe_sequence = safe_check(allocated, max_demand, available);
-
+        if (safe_sequence.size() != max_processes) {
+            return;
+        }
+        else {
+            std::cout << "安全序列如下：" << std::endl;
+            for (auto i : safe_sequence) {
+                std::cout << i << std::endl;
+            }
+        }
     }
 
     bool resource_allocation()

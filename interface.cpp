@@ -51,9 +51,9 @@ void interface()
         }
         case 3:
         {
-            ba.safe_check_test();
+            ba.curr_system_safe_check();
+            system("pause");
             break;
-
         }
         case 4:
         {
