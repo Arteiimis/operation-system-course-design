@@ -155,6 +155,7 @@ public:
             safe_sequence = safe_check(allocated, max_demand, available);
             if (safe_sequence.size() != max_processes) {
                 std::cout << "未找到安全序列，该测试序列不安全，执行回滚操作" << std::endl;
+                curr_sys_info_print();
                 available = available + request;
                 allocated[pid] = allocated[pid] - request;
                 need[pid] = need[pid] + request;
