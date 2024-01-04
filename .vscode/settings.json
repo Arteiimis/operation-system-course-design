@@ -57,7 +57,14 @@
         "random": "cpp",
         "string_view": "cpp",
         "numbers": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "complex": "cpp",
+        "optional": "cpp",
+        "fstream": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "cinttypes": "cpp",
+        "variant": "cpp"
     },
     "commentTranslate.hover.enabled": false
 }

@@ -1,5 +1,4 @@
 #include "algorithms.hpp"
-#include "data_structures.hpp"
 
 void bankers_algorithm::init(
     Vector resource,
@@ -72,7 +71,7 @@ bool bankers_algorithm::resource_allocation()
     for (auto i : available.get_vector()) {
         if (i < 0 || available == Vector(3, 0)) {
             std::cout << "系统资源不足，无法初始化" << std::endl;
-            system("pause");
+            pause_screen();
             return false;
         }
     }

@@ -2,6 +2,7 @@
 #include <ostream>
 #include <string>
 #include "test_algorithms.hpp"
+#include "cross_platform.hpp"
 #include "algorithms.hpp"
 
 void display_menu()
@@ -21,12 +22,13 @@ void interface()
 {
     bankers_algorithm ba = bankers_algorithm(3, 5);
     while (true) {
-        system("cls");
+        // clear_output();
+        clear_output();
         display_menu();
         std::cout << "请输入选项：";
         int option;
         std::cin >> option;
-        system("cls");
+        clear_output();
         switch (option) {
         case 1:
         {
@@ -40,20 +42,20 @@ void interface()
             Matrix need = test.need;
             ba.init(resource, available, max_demand, allocated, need);
             std::cout << "系统资源初始化完毕" << std::endl;
-            system("pause");
+            pause_screen();
             break;
         }
         case 2:
         {
             ba.curr_sys_info_print();
-            system("pause");
+            pause_screen();
             break;
 
         }
         case 3:
         {
             ba.curr_system_safe_check();
-            system("pause");
+            pause_screen();
             break;
         }
         case 4:
@@ -86,7 +88,7 @@ void interface()
             std::cout << "即将执行测试单元 1 , 确认? (Y/n):";
             std::cin >> choice;
             if (choice == "\t" || choice == "y") {
-                system("cls");
+                clear_output();
                 test_bankers_algorithm_1(ba);
             }
             else {
@@ -98,7 +100,7 @@ void interface()
             std::cout << "即将执行测试单元 2 , 确认? (Y/n):";
             std::cin >> choice;
             if (choice == "\t" || choice == "y") {
-                system("cls");
+                clear_output();
                 test_bankers_algorithm_2(ba);
             }
             else {
@@ -109,7 +111,7 @@ void interface()
             std::cout << "即将执行测试单元 3 , 确认? (Y/n):";
             std::cin >> choice;
             if (choice == "\t" || choice == "y") {
-                system("cls");
+                clear_output();
                 test_bankers_algorithm_3(ba);
             }
             else {

@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <climits>
 #include "data_structures.hpp"
+#include "cross_platform.hpp"
 
 class bankers_algorithm
 {
