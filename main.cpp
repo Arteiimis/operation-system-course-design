@@ -1,8 +1,8 @@
 #include <iostream>
 #include <ostream>
 #include <string>
-#include "test_algorithms.cpp"
-#include "algorithms.cpp"
+#include "test_algorithms.hpp"
+#include "algorithms.hpp"
 
 void display_menu()
 {
