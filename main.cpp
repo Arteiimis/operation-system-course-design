@@ -1,12 +1,11 @@
+#include "algorithms.hpp"
+#include "cross_platform.hpp"
+#include "test_algorithms.hpp"
 #include <iostream>
 #include <ostream>
 #include <string>
-#include "test_algorithms.hpp"
-#include "cross_platform.hpp"
-#include "algorithms.hpp"
 
-void display_menu()
-{
+void display_menu() {
     std::cout << "┌---------------------------------┐" << std::endl;
     std::cout << "│1. init system data              │" << std::endl;
     std::cout << "│2. view current system info      │" << std::endl;
@@ -18,10 +17,9 @@ void display_menu()
     std::cout << "└---------------------------------┘" << std::endl;
 }
 
-void interface()
-{
+void interface() {
     bankers_algorithm ba = bankers_algorithm(3, 5);
-    while (true) {
+    while ( true ) {
         // clear_output();
         clear_output();
         display_menu();
@@ -29,17 +27,17 @@ void interface()
         int option;
         std::cin >> option;
         clear_output();
-        switch (option) {
+        switch ( option ) {
         case 1:
         {
             std::cout << "即将使用测试数据 1 初始化系统资源..." << std::endl;
             test_unit_1 test;
             // 测试数据初始化
-            Vector resource = test.resource;
-            Vector available = test.available;
+            Vector resource   = test.resource;
+            Vector available  = test.available;
             Matrix max_demand = test.max_demand;
-            Matrix allocated = test.allocated;
-            Matrix need = test.need;
+            Matrix allocated  = test.allocated;
+            Matrix need       = test.need;
             ba.init(resource, available, max_demand, allocated, need);
             std::cout << "系统资源初始化完毕" << std::endl;
             pause_screen();
@@ -50,7 +48,6 @@ void interface()
             ba.curr_sys_info_print();
             pause_screen();
             break;
-
         }
         case 3:
         {
@@ -65,18 +62,14 @@ void interface()
             std::cout << "2. 测试单元 2" << std::endl;
             std::cout << "3. 测试单元 3" << std::endl;
             std::cout << "请输入选项：";
-            int option;
+            int         option;
             std::string choice;
             std::cin >> option;
-            switch (option) {
-            case 1:
-                goto test_1;
-            case 2:
-                goto test_2;
-            case 3:
-                goto test_3;
-            case 4:
-                break;
+            switch ( option ) {
+            case 1: goto test_1;
+            case 2: goto test_2;
+            case 3: goto test_3;
+            case 4: break;
             default:
             {
                 std::cout << "无效选项" << std::endl;
@@ -87,7 +80,7 @@ void interface()
         test_1:
             std::cout << "即将执行测试单元 1 , 确认? (Y/n):";
             std::cin >> choice;
-            if (choice == "\t" || choice == "y") {
+            if ( choice == "\t" || choice == "y" ) {
                 clear_output();
                 test_bankers_algorithm_1(ba);
             }
@@ -99,7 +92,7 @@ void interface()
         test_2:
             std::cout << "即将执行测试单元 2 , 确认? (Y/n):";
             std::cin >> choice;
-            if (choice == "\t" || choice == "y") {
+            if ( choice == "\t" || choice == "y" ) {
                 clear_output();
                 test_bankers_algorithm_2(ba);
             }
@@ -110,7 +103,7 @@ void interface()
         test_3:
             std::cout << "即将执行测试单元 3 , 确认? (Y/n):";
             std::cin >> choice;
-            if (choice == "\t" || choice == "y") {
+            if ( choice == "\t" || choice == "y" ) {
                 clear_output();
                 test_bankers_algorithm_3(ba);
             }
@@ -120,7 +113,7 @@ void interface()
         }
         case 5:
         {
-            while (true) {
+            while ( true ) {
                 ba = input_custem_test_matrix();
                 std::cout << "自定义测试矩阵如下：" << std::endl;
                 ba.curr_sys_info_print();
@@ -128,7 +121,7 @@ void interface()
                 // std::cin.ignore(INT_MAX, '\n');
                 std::string choice;
                 std::getline(std::cin, choice);
-                if (choice != "n") {
+                if ( choice != "n" ) {
                     break;
                 }
                 std::cout << "请重新输入：" << std::endl;
@@ -144,8 +137,7 @@ void interface()
     }
 }
 
-int main()
-{
+int main() {
     interface();
     return 0;
 }

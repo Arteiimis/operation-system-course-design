@@ -6,19 +6,19 @@
 
 #ifdef __WIN32__
 
-#include <windows.h>
-#include <system.h>
+#    include <system.h>
+#    include <windows.h>
 
-#endif // __WIN32__
+#endif   // __WIN32__
 
 #ifdef __linux__
 
-#include <unistd.h>
-#include <termios.h>
+#    include <termios.h>
+#    include <unistd.h>
 
-#endif // __linux__
+#endif   // __linux__
 
 void clear_output();
 void pause_screen();
 
-#endif // CROSS_PLATFORM_HPP_INCLUDED
+#endif   // CROSS_PLATFORM_HPP_INCLUDED
